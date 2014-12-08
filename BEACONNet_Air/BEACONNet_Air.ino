@@ -13,7 +13,7 @@ Port Assignments:
 Serial: Computer connection 1, all data + commands
 SerialUSB: NMEA Reconstruction (Future Ground Only, intended to be Tx only)
 Serial1: GPS (Rx only)
-Serial2: 9xTend (Tx/Rx)
+Serial2: 9xTend (Tx/Rx) and OpenLog (Tx only)
 Serial3: Header (not connected - future expansion - could be used to replace Serial for Uno compatibility)
 
 Analog assignments:
@@ -26,7 +26,7 @@ A11: Ground (should be within a couple of bits of min)
 
 #include <TinyGPS++.h>
 
-#define DEMO_MODE 1 //set this to 0 for flight configuration; otherwise, the two following switches matter
+#define DEMO_MODE 0 //set this to 0 for flight configuration; otherwise, the two following switches matter
 #define ANALOG_DATA 0 //use live analog data in demo mode
 #define GPS_DATA 0 //use live GPS data in demo mode
 #define REPORT_FREQ 5 //how many seconds between reports
@@ -58,7 +58,7 @@ void setup()
   //speed operation to make things happen as quickly as possible
   Serial.begin(115200);
   Serial1.begin(4800);
-  Serial2.begin(4800);
+  Serial2.begin(115200);
   Serial3.begin(4800);
   SerialUSB.begin(115200);
 }
@@ -110,9 +110,12 @@ void sendDemoData()
     unsigned long startTime = millis(); //get the starting time from the millisecond timer
     while((millis() - startTime) < (REPORT_FREQ*1000)) //while we're waiting for our turn, send GPS data to TinyGPS++
     {
-      gps.encode(Serial1.read());
+      if(Serial1.available())
+      {
+        gps.encode(Serial1.read());
+      }
     }
-    if(gps.location.isUpdated())
+    if(gps.location.isValid())
     {
       collectGPSData();
     }
@@ -135,9 +138,12 @@ void sendRealData()
   unsigned long startTime = millis(); //get the starting time from the millisecond timer
   while((millis() - startTime) < (REPORT_FREQ*1000)) //while we're waiting for our turn, send GPS data to TinyGPS++
   {
-    gps.encode(Serial1.read());
+    if(Serial1.available())
+    {
+      gps.encode(Serial1.read());
+    }
   }
-  if(gps.location.isUpdated())
+  if(gps.location.isValid())
   {
     collectGPSData();
     collectAnalogData();
