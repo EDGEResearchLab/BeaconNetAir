@@ -6,8 +6,9 @@
 Purpose of this code is to provide the BEACONNet functionality to
 the Arduino Due.  Primary goal is to parse a gps feed and sample
 the built in sensors, generating the proprietary NMEA-compatable 
-$PEDGE sentence.  Future implmentations will include support for
-$PEDGD (other data), $PEDGC (command from ground) and $PEDGA (ack) sentences
+$PEDGE sentence.  Future implmentations will include suppot for
+$PEDGM (broadcast message), $PEDGD (other data), $PEDGC (command 
+from ground) and $PEDGA (ack) sentences
 
 Port Assignments:
 Serial: Computer connection 1, all data + commands
