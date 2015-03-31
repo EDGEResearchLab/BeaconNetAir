@@ -48,7 +48,8 @@ int myRail = 4095;
 int myTemperature = 340;
 int myPressure = 3205;
 int myHumidity = 1023;
-int myGround = 0;
+int myBattery = 3802;
+int myCPM = 0; //Placeholder for CPM data from Teviso RD sensor - not currently implemented, will remain 0
 
 void setup()
 {
@@ -74,7 +75,7 @@ void sendPEDGE()
 {
   //Format: $PEDGE,<GPSTime>,<GPSLat>,<GPSLon>,<GPSAlt>,<GPSSpd>,<GPSCourse>,<GPSNumSats>,<GPSHDOP>,<A1>,<A2>,<A3>,<A4>,<A5>*<CKSUM>
   //Build the primary string out, omitting the '$' and '*' since they're not used for the checksum calcs
-  String sentence = "PEDGE,ID"+String(BALLOON_ID)+","+String(myDate)+","+String(myTime)+","+String(myLatitude,6)+","+String(myLongitude,6)+","+String(myAltitude)+","+String(mySpeed)+","+String(myCourse)+","+String(mySats)+","+String(myHDOP)+","+String(myRail)+","+String(myTemperature)+","+String(myPressure)+","+String(myHumidity)+","+String(myGround);
+  String sentence = "PEDGE,ID"+String(BALLOON_ID)+","+String(myDate)+","+String(myTime)+","+String(myLatitude,6)+","+String(myLongitude,6)+","+String(myAltitude)+","+String(mySpeed)+","+String(myCourse)+","+String(mySats)+","+String(myHDOP)+","+String(myRail)+","+String(myTemperature)+","+String(myPressure)+","+String(myHumidity)+","+String(myBattery)+","+String(myCPM);
   
   //Calculate the checksum
   int XORVal, i; //variable declaration for the following calculation
@@ -177,7 +178,7 @@ void collectAnalogData()
   myTemperature = analogRead(A8);
   myPressure = analogRead(A9);
   myHumidity = analogRead(A10);
-  myGround = analogRead(A11);
+  myBattery = analogRead(A11);
 }
 
 void sendErrorMessage()
