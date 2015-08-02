@@ -30,8 +30,10 @@ A11: Ground (should be within a couple of bits of min)
 #define DEMO_MODE 0 //set this to 0 for flight configuration; otherwise, the two following switches matter
 #define ANALOG_DATA 0 //use live analog data in demo mode
 #define GPS_DATA 0 //use live GPS data in demo mode
-#define REPORT_FREQ 5 //how many seconds between reports
+#define REPORT_FREQ 30 //how many seconds between reports
 #define BALLOON_ID 11 //this needs to be different for each balloon.  DON'T FORGET!
+
+
 
 TinyGPSPlus gps;
 
@@ -60,7 +62,7 @@ void setup()
   //speed operation to make things happen as quickly as possible
   Serial.begin(115200);
   Serial1.begin(4800);
-  Serial2.begin(115200);
+  Serial2.begin(9600); //using 9600 (the default speed for the openlog) to avoid the brownout issue
   Serial3.begin(4800);
   SerialUSB.begin(115200);
 }
@@ -73,7 +75,7 @@ void loop()
 
 void sendPEDGE()
 {
-  //Format: $PEDGE,<GPSTime>,<GPSLat>,<GPSLon>,<GPSAlt>,<GPSSpd>,<GPSCourse>,<GPSNumSats>,<GPSHDOP>,<A1>,<A2>,<A3>,<A4>,<A5>*<CKSUM>
+  //Format: $PEDGE,<ID>,<GPSDate>,<GPSTime>,<GPSLat>,<GPSLon>,<GPSAlt>,<GPSSpd>,<GPSCourse>,<GPSNumSats>,<GPSHDOP>,<A1>,<A2>,<A3>,<A4>,<A5>*<CKSUM>
   //Build the primary string out, omitting the '$' and '*' since they're not used for the checksum calcs
   String sentence = "PEDGE,ID"+String(BALLOON_ID)+","+String(myDate)+","+String(myTime)+","+String(myLatitude,6)+","+String(myLongitude,6)+","+String(myAltitude)+","+String(mySpeed)+","+String(myCourse)+","+String(mySats)+","+String(myHDOP)+","+String(myRail)+","+String(myTemperature)+","+String(myPressure)+","+String(myHumidity)+","+String(myBattery)+","+String(myCPM);
   
